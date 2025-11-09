@@ -1,0 +1,75 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Expo
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# Environment variables - NEVER COMMIT!
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+.env.*
+
+# Native builds
+*.jks
+*.p8
+*.p12
+*.key
+*.keystore
+*.mobileprovision
+*.orig.*
+android/app/google-services.json
+ios/GoogleService-Info.plist
+
+# Logs
+*.log
+npm-debug.*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+.metro-health-check*
+*.tmp
+*.backup
+*.bak
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing
+coverage/
+.nyc_output/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache

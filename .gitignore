@@ -1,0 +1,50 @@
+# Chatita - Root Project .gitignore
+
+# Environment variables - NEVER COMMIT!
+.env
+.env.*
+*.env
+**/.env
+**/.env.*
+
+# API Keys and Secrets
+**/secrets/
+**/credentials/
+**/*secret*
+**/*credential*
+**/*apikey*
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+**/dist/
+**/build/
+
+# Logs
+*.log
+logs/
+**/logs/
+
+# OS files
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.backup
+
+# Uploaded files
+uploads/
+**/uploads/
