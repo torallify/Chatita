@@ -8,8 +8,10 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Slider,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { useApp } from '../context/AppContext';
 import { getTranslations } from '../i18n/translations';
 import { GlucoseCard } from '../components/GlucoseCard';
@@ -21,8 +23,10 @@ import { componentStyles } from '../theme/componentStyles';
 import { MoodType, GlucoseReading, MoodEntry } from '../types';
 
 export function HomeScreen() {
+  const navigation = useNavigation<any>();
   const {
     language,
+    userName,
     currentGlucose,
     addGlucoseReading,
     addMoodEntry,
@@ -95,8 +99,9 @@ export function HomeScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          {/* Header */}
-          <Text style={styles.title}>{t.home.title}</Text>
+          {/* Personalized Header */}
+          <Text style={styles.greeting}>Hello {userName} 👋</Text>
+          <Text style={styles.subtitle}>How are you feeling today?</Text>
 
           {/* Glucose Card */}
           <GlucoseCard
@@ -105,6 +110,15 @@ export function HomeScreen() {
             label={t.home.glucoseLabel}
             noDataText={t.home.noGlucoseYet}
           />
+
+          {/* Add Meal Button */}
+          <TouchableOpacity
+            style={[componentStyles.button.primary, styles.addMealButton]}
+            onPress={() => navigation.navigate('Meals')}
+          >
+            <Text style={styles.buttonIcon}>📸</Text>
+            <Text style={styles.addMealText}>Add Meal</Text>
+          </TouchableOpacity>
 
           {/* Mood Selector */}
           <View style={styles.section}>
@@ -115,6 +129,48 @@ export function HomeScreen() {
               moods={t.moods}
             />
           </View>
+
+          {/* Stress Level Slider */}
+          {selectedMood === 'stressed' && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Stress Level</Text>
+              <View style={[styles.card, componentStyles.card]}>
+                <Slider
+                  style={styles.slider}
+                  minimumValue={1}
+                  maximumValue={10}
+                  step={1}
+                  value={stressLevel}
+                  onValueChange={setStressLevel}
+                  minimumTrackTintColor={colors.primary}
+                  maximumTrackTintColor={colors.text.light}
+                  thumbTintColor={colors.primary}
+                />
+                <View style={styles.sliderLabels}>
+                  <Text style={styles.sliderLabel}>Low</Text>
+                  <Text style={styles.sliderValue}>{stressLevel}</Text>
+                  <Text style={styles.sliderLabel}>High</Text>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {/* Activity Nudge */}
+          <View style={styles.section}>
+            <DailyTipCard
+              title="Activity Tip"
+              message="💙 A short walk after meals can help lower your glucose"
+              icon="🚶‍♀️"
+            />
+          </View>
+
+          {/* View Insights Button */}
+          <TouchableOpacity
+            style={[componentStyles.button.secondary, styles.insightsButton]}
+            onPress={() => navigation.navigate('Insights')}
+          >
+            <Text style={styles.insightsButtonText}>📊 View Insights</Text>
+          </TouchableOpacity>
 
           {/* Daily Tip */}
           <View style={styles.section}>
@@ -181,10 +237,64 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
   },
-  title: {
+  greeting: {
     ...typography.h1,
     color: colors.text.primary,
+    marginBottom: 8,
+    fontSize: 28,
+    fontWeight: '700',
+  },
+  subtitle: {
+    ...typography.body,
+    color: colors.text.secondary,
     marginBottom: 24,
+    fontSize: 16,
+  },
+  addMealButton: {
+    marginTop: 20,
+    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  buttonIcon: {
+    fontSize: 20,
+  },
+  addMealText: {
+    ...typography.button,
+    color: colors.surface,
+  },
+  insightsButton: {
+    marginTop: 20,
+    marginBottom: 12,
+  },
+  insightsButtonText: {
+    ...typography.button,
+    color: colors.primary,
+    textAlign: 'center',
+  },
+  card: {
+    padding: 16,
+  },
+  slider: {
+    width: '100%',
+    height: 40,
+  },
+  sliderLabels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  sliderLabel: {
+    ...typography.caption,
+    color: colors.text.secondary,
+  },
+  sliderValue: {
+    ...typography.h3,
+    color: colors.primary,
+    fontWeight: '700',
   },
   section: {
     marginTop: 28,

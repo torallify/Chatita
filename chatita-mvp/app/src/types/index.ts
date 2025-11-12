@@ -31,6 +31,20 @@ export interface NutritionInfo {
   protein?: number;
   fat?: number;
   fiber?: number;
+  sugar?: number;
+  sodium?: number;
+}
+
+export interface MealAnalysis {
+  detectedFoods: string[];
+  calories: number;
+  carbs: number;
+  protein: number;
+  fat: number;
+  fiber: number;
+  sugar: number;
+  sodium: number;
+  portionSize: string;
 }
 
 export interface MenuRecommendation {
@@ -57,6 +71,26 @@ export interface UserData {
   meals: Meal[];
   moodEntries: MoodEntry[];
   language: Language;
+  userName?: string;
+}
+
+export interface Milestone {
+  id: string;
+  name: string;
+  description: string;
+  daysRequired: number;
+  reward: string;
+  icon: string;
+  achieved: boolean;
+  achievedDate?: string;
+}
+
+export interface ActivityReminder {
+  id: string;
+  title: string;
+  message: string;
+  timestamp: string;
+  completed: boolean;
 }
 
 export interface DailyTip {

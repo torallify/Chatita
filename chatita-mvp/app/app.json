@@ -3,11 +3,10 @@
     "name": "Chatita",
     "slug": "chatita",
     "version": "1.0.0",
+    "description": "Your health companion",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#F2F6FA"
     },
@@ -19,14 +18,7 @@
       "bundleIdentifier": "com.chatita.app"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#F2F6FA"
-      },
       "package": "com.chatita.app"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [

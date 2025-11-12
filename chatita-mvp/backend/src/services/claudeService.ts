@@ -1,10 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
-
 const MODEL = 'claude-sonnet-4-20250514';
 
 /**
@@ -16,14 +11,19 @@ export async function analyzeMenuWithVision(
   userPreferences?: string,
   language: 'en' | 'es' = 'en'
 ): Promise<any> {
+  // Initialize Anthropic client with API key from environment
+  const anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY || '',
+  });
+
   const grandmotherPersona = language === 'es'
-    ? `Eres Chatita, una abuela cariñosa y sabia que ayuda a tu nieto(a) con diabetes a tomar buenas decisiones sobre comida. Eres cálida, alentadora, nunca crítica. Hablas con amor pero también con conocimiento sobre el manejo de la diabetes.`
-    : `You are Chatita, a loving and wise grandmother helping your grandchild with diabetes make good food choices. You are warm, encouraging, never judgmental. You speak with love but also with knowledge about diabetes management.`;
+    ? `Eres Chatita, una compañera de salud cariñosa y sabia que ayuda a personas con diabetes a tomar buenas decisiones sobre comida. Eres cálida, alentadora, nunca crítica. Hablas con amor pero también con conocimiento sobre el manejo de la diabetes.`
+    : `You are Chatita, a loving and wise health companion helping people with diabetes make good food choices. You are warm, encouraging, never judgmental. You speak with care and knowledge about diabetes management.`;
 
   const userContext = userPreferences
     ? language === 'es'
-      ? `\n\nTu nieto(a) mencionó: "${userPreferences}"`
-      : `\n\nYour grandchild mentioned: "${userPreferences}"`
+      ? `\n\nEl usuario mencionó: "${userPreferences}"`
+      : `\n\nThe user mentioned: "${userPreferences}"`
     : '';
 
   const taskPrompt = language === 'es'
@@ -44,10 +44,10 @@ Responde en formato JSON con esta estructura:
       "warnings": ["precaución si aplica"]
     }
   ],
-  "generalAdvice": "consejo general cariñoso de la abuela"
+  "generalAdvice": "consejo general cariñoso"
 }
 
-Recuerda: Sé específica, práctica, y siempre con amor. Si tu nieto(a) tiene antojo de algo, honra ese antojo pero ayúdale a comerlo de manera más saludable.${userContext}`
+Recuerda: Sé específica, práctica, y siempre con cariño. Si el usuario tiene antojo de algo, honra ese antojo pero ayúdale a comerlo de manera más saludable.${userContext}`
     : `Analyze this restaurant menu photo and recommend 2-3 diabetes-friendly options. For each option, include:
 
 1. **Dish name**
@@ -65,10 +65,10 @@ Respond in JSON format with this structure:
       "warnings": ["warning if applicable"]
     }
   ],
-  "generalAdvice": "warm grandmother advice"
+  "generalAdvice": "warm, caring advice"
 }
 
-Remember: Be specific, practical, and always loving. If your grandchild craves something, honor that craving but help them eat it in a healthier way.${userContext}`;
+Remember: Be specific, practical, and always caring. If the user craves something, honor that craving but help them eat it in a healthier way.${userContext}`;
 
   try {
     const message = await anthropic.messages.create({
@@ -129,9 +129,14 @@ export async function generateWeeklyInsights(
   },
   language: 'en' | 'es' = 'en'
 ): Promise<any> {
+  // Initialize Anthropic client with API key from environment
+  const anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY || '',
+  });
+
   const grandmotherPersona = language === 'es'
-    ? `Eres Chatita, una abuela cariñosa que revisa los datos de salud de tu nieto(a) con diabetes de la última semana. Eres alentadora, celebras los logros, y das sugerencias gentiles cuando ves áreas de mejora. Siempre hablas con amor.`
-    : `You are Chatita, a loving grandmother reviewing your grandchild's diabetes health data from the past week. You are encouraging, celebrate wins, and give gentle suggestions when you see areas for improvement. You always speak with love.`;
+    ? `Eres Chatita, una compañera de salud cariñosa que revisa los datos de salud del usuario con diabetes de la última semana. Eres alentadora, celebras los logros, y das sugerencias gentiles cuando ves áreas de mejora. Siempre hablas con amor.`
+    : `You are Chatita, a caring health companion reviewing the user's diabetes health data from the past week. You are encouraging, celebrate wins, and give gentle suggestions when you see areas for improvement. You always speak with care and warmth.`;
 
   const taskPrompt = language === 'es'
     ? `Analiza estos datos de la última semana y genera 3-4 tarjetas de insight. Cada tarjeta debe:
@@ -150,7 +155,7 @@ Responde en formato JSON:
   "insights": [
     {
       "title": "título corto",
-      "message": "observación cariñosa de la abuela",
+      "message": "observación cariñosa",
       "type": "positive" | "neutral" | "suggestion",
       "icon": "emoji apropiado"
     }
@@ -174,7 +179,7 @@ Respond in JSON format:
   "insights": [
     {
       "title": "short title",
-      "message": "grandmother's loving observation",
+      "message": "caring, supportive observation",
       "type": "positive" | "neutral" | "suggestion",
       "icon": "appropriate emoji"
     }

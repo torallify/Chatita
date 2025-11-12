@@ -1,15 +1,32 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { HomeScreen } from '../screens/HomeScreen';
 import { MealsScreen } from '../screens/MealsScreen';
+import { MealAnalysisScreen } from '../screens/MealAnalysisScreen';
 import { InsightsScreen } from '../screens/InsightsScreen';
+import { RewardsScreen } from '../screens/RewardsScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { getTranslations } from '../i18n/translations';
 
 const Tab = createBottomTabNavigator();
+const MealsStack = createStackNavigator();
+
+function MealsStackNavigator() {
+  return (
+    <MealsStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <MealsStack.Screen name="MealsMain" component={MealsScreen} />
+      <MealsStack.Screen name="MealAnalysis" component={MealAnalysisScreen} />
+    </MealsStack.Navigator>
+  );
+}
 
 export function AppNavigator() {
   const { language } = useApp();
@@ -48,11 +65,11 @@ export function AppNavigator() {
       />
       <Tab.Screen
         name="Meals"
-        component={MealsScreen}
+        component={MealsStackNavigator}
         options={{
           tabBarLabel: t.meals.title,
           tabBarIcon: ({ color, size }) => (
-            <TabIcon icon="🍽️" color={color} size={size} />
+            <TabIcon icon="📸" color={color} size={size} />
           ),
         }}
       />
@@ -62,7 +79,17 @@ export function AppNavigator() {
         options={{
           tabBarLabel: t.insights.title,
           tabBarIcon: ({ color, size }) => (
-            <TabIcon icon="💡" color={color} size={size} />
+            <TabIcon icon="📊" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Rewards"
+        component={RewardsScreen}
+        options={{
+          tabBarLabel: 'Rewards',
+          tabBarIcon: ({ color, size }) => (
+            <TabIcon icon="🏆" color={color} size={size} />
           ),
         }}
       />

@@ -6,12 +6,13 @@ import path from 'path';
 import fs from 'fs';
 import { analyzeMenuRoute } from './routes/analyzeMenu';
 import { generateInsightsRoute } from './routes/generateInsights';
+import { analyzeMealRoute } from './routes/analyzeMeal';
 
 // Load environment variables
 dotenv.config();
 
 const app: Express = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
 // Middleware
 app.use(cors());
@@ -64,6 +65,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 // Routes
 app.post('/api/analyze-menu', upload.single('menuImage'), analyzeMenuRoute);
+app.post('/api/analyze-meal', upload.single('mealImage'), analyzeMealRoute);
 app.post('/api/generate-insights', generateInsightsRoute);
 
 // Error handling middleware
@@ -81,7 +83,7 @@ app.use((req: Request, res: Response) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Chatita Backend running on port ${PORT}`);
   console.log(`📍 Health check: http://localhost:${PORT}/health`);
   console.log(`🤖 Claude API Key configured: ${process.env.ANTHROPIC_API_KEY ? '✅ Yes' : '❌ No'}`);

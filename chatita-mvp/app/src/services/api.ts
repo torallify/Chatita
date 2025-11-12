@@ -1,16 +1,18 @@
 import axios from 'axios';
-import { Language, MenuAnalysis, InsightCard } from '../types';
+import { Language, MenuAnalysis, InsightCard, MealAnalysis } from '../types';
 import { Platform } from 'react-native';
 
 // Determine the base URL based on the platform
-// iOS Simulator: localhost works
-// Android Emulator: needs 10.0.2.2
-// Physical device: needs your computer's IP address
+// iOS Simulator: use localhost
+// Android Emulator: use 10.0.2.2
+// Physical devices: use computer's IP address
 const getBaseURL = () => {
   if (__DEV__) {
+    // Android Emulator uses special IP
     if (Platform.OS === 'android') {
       return 'http://10.0.2.2:3000';
     }
+    // iOS Simulator can use localhost
     return 'http://localhost:3000';
   }
   // Production URL would go here
@@ -21,7 +23,7 @@ const API_BASE_URL = getBaseURL();
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // 30 seconds for Claude API calls
+  timeout: 60000, // 60 seconds for Claude API calls (image processing can be slow)
   headers: {
     'Content-Type': 'application/json',
   },
@@ -101,6 +103,58 @@ export async function generateInsights(
       error.response?.data?.error ||
       error.message ||
       'Failed to generate insights. Please try again.'
+    );
+  }
+}
+
+/**
+ * Analyzes a meal photo using Claude Vision API to get nutrition information
+ */
+export async function analyzeMeal(
+  imageUri: string,
+  language: Language = 'en'
+): Promise<MealAnalysis> {
+  try {
+    const formData = new FormData();
+
+    // Add the image file
+    const imageFile = {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'meal.jpg',
+    } as any;
+
+    formData.append('mealImage', imageFile);
+    formData.append('language', language);
+
+    const response = await api.post('/api/analyze-meal', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 90000, // 90 seconds for image uploads + AI processing
+    });
+
+    if (response.data.success) {
+      return response.data.analysis;
+    } else {
+      throw new Error(response.data.error || 'Failed to analyze meal');
+    }
+  } catch (error: any) {
+    console.error('Error analyzing meal:', error);
+
+    // More detailed error messages
+    if (error.code === 'ECONNABORTED') {
+      throw new Error('Analysis is taking too long. Please try with a smaller image or check your connection.');
+    }
+
+    if (error.response?.status === 500) {
+      throw new Error('Server error. Please make sure the backend is running.');
+    }
+
+    throw new Error(
+      error.response?.data?.error ||
+      error.message ||
+      'Failed to analyze meal. Please try again.'
     );
   }
 }
